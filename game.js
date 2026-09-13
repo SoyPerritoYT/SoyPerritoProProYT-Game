@@ -16,13 +16,14 @@ const playerName = document.querySelector('#playerName');
 const roomStatus = document.querySelector('#roomStatus');
 const skinList = document.querySelector('#skinList');
 const skinUpload = document.querySelector('#skinUpload');
+const fullscreenButton = document.querySelector('#fullscreenButton');
 
 const TILE = 40, WORLD_W = 160, WORLD_H = 18;
 const keys = new Set();
 const world = Array.from({ length: WORLD_H }, () => Array(WORLD_W).fill(0));
 let running = false, paused = false, lastTime = 0, cameraX = 0, facing = 1, blocks = 0, best = 0, gamepadAction = false;
 let networkTimer = 0;
-const online = { room: '', id: crypto.randomUUID?.() || String(Date.now()), players: new Map(), source: null };
+const online = { room: '', id: window.crypto && window.crypto.randomUUID ? window.crypto.randomUUID() : `${Date.now()}-${Math.random()}`, players: new Map(), source: null };
 const skins = { gold: ['#f7b758', '#d9873a'], blue: ['#65b9e8', '#2875b6'], forest: ['#79b95b', '#3c7a3f'], pink: ['#f49bb4', '#b84d78'], space: ['#8c83da', '#433d83'], snow: ['#f4f7ff', '#80b8d2'], lava: ['#fb8c45', '#b43b2e'], royal: ['#ffd65a', '#7452b8'] };
 let selectedSkin = 'gold', customSkin = '', customImage;
 const player = { x: 7 * TILE, y: 0, w: 27, h: 36, vx: 0, vy: 0, grounded: false };
@@ -44,7 +45,7 @@ function terrain() {
 
 function tileAt(px, py) {
   const x = Math.floor(px / TILE), y = Math.floor(py / TILE);
-  return world[y]?.[x] || 0;
+  return world[y] && world[y][x] || 0;
 }
 function solid(px, py) { return tileAt(px, py) > 0; }
 function showHint(text) { hint.textContent = text; hint.classList.add('show'); setTimeout(() => hint.classList.remove('show'), 900); }
@@ -73,7 +74,7 @@ function targetTile() { return { x: Math.floor((player.x + (facing > 0 ? player.
 function mine() {
   if (!running || paused) return;
   const t = targetTile();
-  if (world[t.y]?.[t.x] && world[t.y][t.x] !== 5) {
+  if (world[t.y] && world[t.y][t.x] && world[t.y][t.x] !== 5) {
     world[t.y][t.x] = 0;
     blocks += 1;
     blockCount.textContent = blocks;
@@ -110,7 +111,7 @@ function render() {
   for (let y = 0; y < WORLD_H; y += 1) for (let x = from; x < to; x += 1) if (world[y][x]) drawTile(world[y][x], x, y);
   const px = player.x - cameraX, py = player.y;
   ctx.save(); if (facing < 0) { ctx.translate(px + player.w, py); ctx.scale(-1, 1); ctx.translate(-px, -py); }
-  const ownPalette = skins[selectedSkin] || skins.gold; ctx.fillStyle = ownPalette[1]; ctx.fillRect(px + 3, py + 15, 24, 20); ctx.fillStyle = ownPalette[0]; ctx.fillRect(px, py, 27, 22); ctx.fillStyle = '#5a392c'; ctx.fillRect(px + 4, py - 6, 8, 11); ctx.fillRect(px + 19, py - 6, 8, 11); ctx.fillStyle = '#1d3045'; ctx.fillRect(px + 7, py + 7, 4, 4); ctx.fillRect(px + 19, py + 7, 4, 4); ctx.fillRect(px + 13, py + 14, 5, 4); if (customImage?.complete) ctx.drawImage(customImage, px, py, 27, 27); ctx.restore();
+  const ownPalette = skins[selectedSkin] || skins.gold; ctx.fillStyle = ownPalette[1]; ctx.fillRect(px + 3, py + 15, 24, 20); ctx.fillStyle = ownPalette[0]; ctx.fillRect(px, py, 27, 22); ctx.fillStyle = '#5a392c'; ctx.fillRect(px + 4, py - 6, 8, 11); ctx.fillRect(px + 19, py - 6, 8, 11); ctx.fillStyle = '#1d3045'; ctx.fillRect(px + 7, py + 7, 4, 4); ctx.fillRect(px + 19, py + 7, 4, 4); ctx.fillRect(px + 13, py + 14, 5, 4); if (customImage && customImage.complete) ctx.drawImage(customImage, px, py, 27, 27); ctx.restore();
   if (running && !paused) { const t = targetTile(); ctx.strokeStyle = '#fff'; ctx.lineWidth = 3; ctx.strokeRect(t.x * TILE - cameraX + 2, t.y * TILE + 2, TILE - 4, TILE - 4); }
   online.players.forEach(remote => { if (remote.id === online.id) return; drawDog(remote.x - cameraX, remote.y, remote.facing, remote.skin, remote.name); });
 }
@@ -130,12 +131,33 @@ function setupFriends() {
   friendsButton.addEventListener('click', () => friendsPanel.classList.remove('hidden')); closeFriends.addEventListener('click', () => friendsPanel.classList.add('hidden'));
   playerName.addEventListener('change', () => { try { localStorage.setItem('soyperrito-name', playerName.value); } catch { /* No afecta a la partida. */ } });
   skinUpload.addEventListener('change', event => { const file = event.target.files[0]; if (!file || file.size > 250000) return showHint('USA UNA IMAGEN MENOR DE 250 KB'); const reader = new FileReader(); reader.onload = () => { customSkin = reader.result; customImage = new Image(); customImage.src = customSkin; showHint('SKIN IMPORTADA (LOCAL)'); }; reader.readAsDataURL(file); });
-  joinRoom.addEventListener('click', async () => { const code = roomCode.value.trim().toUpperCase() || Math.random().toString(36).slice(2, 8).toUpperCase(); roomCode.value = code; try { const response = await fetch('/api/join', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ room: code, id: online.id, name: playerName.value || 'SoyPerrito', skin: selectedSkin }) }); const data = await response.json(); online.room = code; online.players = new Map(data.players.map(item => [item.id, item])); online.source?.close(); online.source = new EventSource(`/events?room=${encodeURIComponent(code)}`); online.source.onmessage = event => { const message = JSON.parse(event.data); if (message.type === 'player') online.players.set(message.player.id, message.player); if (message.type === 'block' && message.id !== online.id && world[message.y]) world[message.y][message.x] = message.value; }; roomStatus.textContent = `Sala ${code}: comparte este código con tus amigos`; friendsPanel.classList.add('hidden'); showHint('SALA CREADA: ' + code); } catch { roomStatus.textContent = 'No se pudo conectar. Ejecuta npm start.'; } });
+  joinRoom.addEventListener('click', async () => { const code = roomCode.value.trim().toUpperCase() || Math.random().toString(36).slice(2, 8).toUpperCase(); roomCode.value = code; try { const response = await fetch('/api/join', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ room: code, id: online.id, name: playerName.value || 'SoyPerrito', skin: selectedSkin }) }); const data = await response.json(); online.room = code; online.players = new Map(data.players.map(item => [item.id, item])); if (online.source) online.source.close(); online.source = new EventSource(`/events?room=${encodeURIComponent(code)}`); online.source.onmessage = event => { const message = JSON.parse(event.data); if (message.type === 'player') online.players.set(message.player.id, message.player); if (message.type === 'block' && message.id !== online.id && world[message.y]) world[message.y][message.x] = message.value; }; roomStatus.textContent = `Sala ${code}: comparte este código con tus amigos`; friendsPanel.classList.add('hidden'); showHint('SALA CREADA: ' + code); } catch { roomStatus.textContent = 'No se pudo conectar. Ejecuta npm start.'; } });
 }
 
 startButton.addEventListener('click', start); pauseButton.addEventListener('click', togglePause);
+fullscreenButton.addEventListener('click', () => { const target = document.documentElement; const request = target.requestFullscreen || target.webkitRequestFullscreen || target.mozRequestFullScreen; if (request) request.call(target); else showHint('PANTALLA COMPLETA NO DISPONIBLE'); });
 document.addEventListener('keydown', event => { if (['ArrowLeft', 'ArrowRight', 'KeyA', 'KeyD'].includes(event.code)) keys.add(event.code); if (['Enter', 'Space'].includes(event.code)) { event.preventDefault(); running ? jump() : start(); } if (event.code === 'ArrowDown') { event.preventDefault(); mine(); } if (event.code === 'ArrowUp') { event.preventDefault(); place(); } if (['KeyP', 'Escape', 'BrowserBack', 'GoBack'].includes(event.code)) togglePause(); });
 document.addEventListener('keyup', event => keys.delete(event.code));
 document.querySelectorAll('[data-action]').forEach(button => { const name = button.dataset.action; button.addEventListener('pointerdown', () => { button.dataset.pointerUsed = 'true'; if (name === 'left') keys.add('ArrowLeft'); else if (name === 'right') keys.add('ArrowRight'); else action(name); }); button.addEventListener('pointerup', () => keys.delete(name === 'left' ? 'ArrowLeft' : 'ArrowRight')); button.addEventListener('pointerleave', () => keys.delete(name === 'left' ? 'ArrowLeft' : 'ArrowRight')); button.addEventListener('click', () => { if (button.dataset.pointerUsed === 'true') { button.dataset.pointerUsed = 'false'; return; } action(name); }); });
-function gamepad() { const pad = navigator.getGamepads?.()[0]; if (pad && running) { if (pad.axes[0] < -.3 || pad.buttons[14]?.pressed) keys.add('ArrowLeft'); else keys.delete('ArrowLeft'); if (pad.axes[0] > .3 || pad.buttons[15]?.pressed) keys.add('ArrowRight'); else keys.delete('ArrowRight'); const pressed = pad.buttons[0]?.pressed || pad.buttons[12]?.pressed; if (pressed && !gamepadAction) jump(); if (pad.buttons[13]?.pressed && !gamepadAction) mine(); if (pad.buttons[1]?.pressed && !gamepadAction) place(); if (pad.buttons[9]?.pressed && !gamepadAction) togglePause(); gamepadAction = pressed || pad.buttons[13]?.pressed || pad.buttons[1]?.pressed || pad.buttons[9]?.pressed; } requestAnimationFrame(gamepad); }
+function pressed(pad, index) { return Boolean(pad && pad.buttons[index] && pad.buttons[index].pressed); }
+function gamepad() {
+  const pads = navigator.getGamepads ? navigator.getGamepads() : [];
+  const pad = pads && pads[0];
+  if (pad) {
+    const left = (pad.axes[0] || 0) < -.3 || pressed(pad, 14);
+    const right = (pad.axes[0] || 0) > .3 || pressed(pad, 15);
+    if (left) keys.add('ArrowLeft'); else keys.delete('ArrowLeft');
+    if (right) keys.add('ArrowRight'); else keys.delete('ArrowRight');
+    const cross = pressed(pad, 0), circle = pressed(pad, 1), up = pressed(pad, 12), down = pressed(pad, 13), options = pressed(pad, 9);
+    const anyAction = cross || circle || up || down || options;
+    if (!gamepadAction) {
+      if (cross) { if (running) jump(); else start(); }
+      else if (down && running) mine();
+      else if ((up || circle) && running) place();
+      else if (options && running) togglePause();
+    }
+    gamepadAction = anyAction;
+  }
+  requestAnimationFrame(gamepad);
+}
 terrain(); setupFriends(); requestAnimationFrame(loop); requestAnimationFrame(gamepad); setTimeout(() => startButton.focus(), 100);
