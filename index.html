@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#101d39" />
+    <title>Perrito Turbo</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="game-shell" aria-label="Juego Perrito Turbo">
+      <header class="topbar">
+        <a class="brand" href="#inicio" aria-label="Perrito Turbo">
+          <span class="brand-mark">🐶</span><span>Perrito<br /><b>Turbo</b></span>
+        </a>
+        <div class="stat-bar" aria-label="Marcadores">
+          <div class="stat"><span>HUESOS</span><strong id="bones">0</strong></div>
+          <div class="stat stat-wide"><span>RÉCORD</span><strong id="best">0</strong></div>
+        </div>
+        <button class="sound-button" id="soundButton" aria-label="Activar o desactivar sonido">🔊</button>
+      </header>
+
+      <section class="hero" id="hero">
+        <div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
+        <div class="sun"></div>
+        <div class="city city-back"></div><div class="city city-front"></div>
+        <div class="mountains"></div>
+        <div class="play-field" id="playField" tabindex="0" aria-label="Zona de juego. Pulsa aceptar, espacio o flecha arriba para saltar.">
+          <div class="finish-line"></div>
+          <div class="dog" id="dog" aria-label="Perrito corredor">
+            <span class="tail">◜</span><span class="ear ear-left"></span><span class="ear ear-right"></span>
+            <span class="face"><i></i><i></i><b></b></span><span class="body"><em></em></span>
+            <span class="leg leg-one"></span><span class="leg leg-two"></span>
+          </div>
+          <div class="toast" id="toast" aria-live="polite"></div>
+          <div class="start-card" id="startCard">
+            <span class="paw">🐾</span>
+            <h1>¡A correr!</h1>
+            <p>Salta los obstáculos y atrapa todos los huesitos que puedas.</p>
+            <button class="primary-button" id="startButton">JUGAR AHORA <span>→</span></button>
+            <small>PC: <kbd>ESPACIO</kbd>/<kbd>↑</kbd> · TV: <kbd>OK</kbd>/<kbd>↑</kbd> · Móvil: toca la pantalla</small>
+          </div>
+          <div class="game-over-card hidden" id="gameOverCard">
+            <span class="medal">🏆</span>
+            <h2>¡Buen intento!</h2>
+            <p>Conseguiste <strong id="finalScore">0</strong> huesitos.</p>
+            <button class="primary-button" id="restartButton">CORRER OTRA VEZ <span>↻</span></button>
+          </div>
+        </div>
+        <div class="grass grass-back"></div><div class="ground"><div class="road-markings"></div></div><div class="grass grass-front"></div>
+      </section>
+
+      <section class="how-to">
+        <article><span class="instruction-icon key-icon">↑</span><div><h2>SALTA</h2><p>Esquiva los conos y charcos.</p></div></article>
+        <article><span class="instruction-icon bone-icon">🦴</span><div><h2>ATRAPA</h2><p>¡Cada huesito suma un punto!</p></div></article>
+        <article><span class="instruction-icon bolt-icon">⚡</span><div><h2>ACELERA</h2><p>El camino se pone más intenso.</p></div></article>
+      </section>
+    </main>
+    <footer>HECHO PARA QUIENES NUNCA DEJAN DE JUGAR <span>♥</span></footer>
+    <script src="game.js"></script>
+  </body>
+</html>
