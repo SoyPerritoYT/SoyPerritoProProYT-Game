@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1c3855" />
+    <title>SoyPerrito: Mundo de Bloques</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <header class="topbar">
+        <a class="brand" href="#inicio" aria-label="SoyPerrito Mundo de Bloques"><span>🐶</span><b>SOY<span>PERRITO</span></b><small>MUNDO DE BLOQUES</small></a>
+        <div class="stats" aria-label="Recursos"><div><small>BLOQUES</small><strong id="blockCount">0</strong></div><div><small>RÉCORD</small><strong id="bestCount">0</strong></div></div>
+        <div class="top-actions"><button id="friendsButton" class="friends-button">👥 AMIGOS</button><button id="pauseButton" class="icon-button" aria-label="Pausar juego">Ⅱ</button></div>
+      </header>
+
+      <section class="game-wrap">
+        <canvas id="game" width="1280" height="720" tabindex="0" aria-label="Mundo de bloques de SoyPerrito. Flechas para mover, aceptar para saltar, abajo para picar y arriba para colocar."></canvas>
+        <div id="hint" class="hint" aria-live="polite"></div>
+        <section id="welcome" class="panel welcome">
+          <span class="dog-badge">🐶</span><p class="eyebrow">BIENVENIDO AL MUNDO DE</p><h1>SoyPerrito<br /><em>Bloques</em></h1>
+          <p>Explora, pica tierra y construye tu propio camino.</p>
+          <button id="startButton" class="main-button">EMPEZAR A JUGAR <span>▶</span></button>
+          <small>TV: <kbd>◀</kbd><kbd>▶</kbd> mueve · <kbd>OK</kbd> salta · <kbd>▼</kbd> pica · <kbd>▲</kbd> coloca</small>
+        </section>
+        <section id="pausePanel" class="panel hidden"><span>⏸</span><h2>EN PAUSA</h2><p>Pulsa OK o el botón de pausa para volver.</p></section>
+      </section>
+
+      <nav class="controls" aria-label="Controles táctiles y para TV">
+        <button data-action="left" aria-label="Mover a la izquierda">◀</button>
+        <button data-action="right" aria-label="Mover a la derecha">▶</button>
+        <button data-action="jump" class="jump" aria-label="Saltar">SALTA<br /><span>OK</span></button>
+        <button data-action="mine" class="mine" aria-label="Picar bloque">⛏<br /><span>PICA</span></button>
+        <button data-action="place" class="place" aria-label="Colocar bloque">▣<br /><span>COLOCA</span></button>
+      </nav>
+      <section class="legend"><span>🌳 Explora el bosque</span><span>⛏ Pica bloques para conseguirlos</span><span>▣ Construye con tus bloques</span></section>
+      <section id="friendsPanel" class="friends-panel hidden" aria-label="Multijugador y skins">
+        <button id="closeFriends" class="close-button" aria-label="Cerrar">×</button><h2>JUEGA CON AMIGOS</h2>
+        <p>Crea una sala y comparte el código. Tus amigos deben abrir esta misma dirección del juego.</p>
+        <div class="room-row"><input id="roomCode" maxlength="16" placeholder="CÓDIGO DE SALA" aria-label="Código de sala" /><button id="joinRoom">ENTRAR</button></div>
+        <label class="name-label">TU NOMBRE <input id="playerName" maxlength="14" placeholder="SoyPerrito" /></label>
+        <p id="roomStatus" class="room-status">Modo individual</p>
+        <h3>SKINS GRATIS DE SOYPERRITO</h3><div id="skinList" class="skin-list" aria-label="Seleccionar skin"></div>
+        <label class="import-skin">IMPORTAR MI SKIN <input id="skinUpload" type="file" accept="image/png,image/jpeg,image/webp" /></label>
+        <small>Las skins incluidas son gratis. Puedes importar una imagen de tu propia skin; se guarda solo en tu navegador.</small>
+      </section>
+    </main>
+    <script src="game.js"></script>
+  </body>
+</html>

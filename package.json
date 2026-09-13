@@ -1,0 +1,10 @@
+{
+  "name": "perrito-turbo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Juego web Perrito Turbo",
+  "scripts": {
+    "start": "node server.js",
+    "check": "node --check game.js"
+  }
+}
