@@ -1,65 +1,54 @@
 <!doctype html>
 <html lang="es">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#101d39" />
-    <title>Perrito Turbo</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@700;800;900&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="styles.css" />
-  </head>
-  <body>
-    <main class="game-shell" aria-label="Juego Perrito Turbo">
-      <header class="topbar">
-        <a class="brand" href="#inicio" aria-label="Perrito Turbo">
-          <span class="brand-mark">🐶</span><span>Perrito<br /><b>Turbo</b></span>
-        </a>
-        <div class="stat-bar" aria-label="Marcadores">
-          <div class="stat"><span>HUESOS</span><strong id="bones">0</strong></div>
-          <div class="stat stat-wide"><span>RÉCORD</span><strong id="best">0</strong></div>
-        </div>
-        <button class="sound-button" id="soundButton" aria-label="Activar o desactivar sonido">🔊</button>
-      </header>
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1.0" />
+<meta name="theme-color" content="#101d39" />
+<title>SoyPerritoProProYT Bed</title>
+<link rel="stylesheet" href="styles.css" />
+<style>
+.skin-panel{max-width:900px;margin:18px auto;padding:18px;border-radius:22px;background:#172644;color:white;box-sizing:border-box}
+.skin-panel h2{margin:0 0 8px}.skin-grid{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.skin-btn,.import-btn{border:0;border-radius:14px;padding:12px 16px;background:#2d4b7c;color:#fff;font-weight:800;cursor:pointer}.skin-btn.active{outline:3px solid #fff}.skin-preview{width:64px;height:64px;border-radius:12px;object-fit:contain;background:#0b1426;padding:5px}.skin-status{margin-top:10px;font-weight:700}.skin-file{display:none}
+</style>
+</head>
+<body>
+<main class="game-shell" aria-label="SoyPerritoProProYT Bed">
+<header class="topbar">
+<a class="brand" href="#inicio" aria-label="SoyPerritoProProYT Bed"><span class="brand-mark">🐶</span><span>SoyPerritoProProYT<br><b>Bed</b></span></a>
+<div class="stat-bar"><div class="stat"><span>HUESOS</span><strong id="bones">0</strong></div><div class="stat stat-wide"><span>RÉCORD</span><strong id="best">0</strong></div></div>
+<button class="sound-button" id="soundButton" aria-label="Sonido">🔊</button>
+</header>
 
-      <section class="hero" id="hero">
-        <div class="cloud cloud-one"></div><div class="cloud cloud-two"></div>
-        <div class="sun"></div>
-        <div class="city city-back"></div><div class="city city-front"></div>
-        <div class="mountains"></div>
-        <div class="play-field" id="playField" tabindex="0" aria-label="Zona de juego. Pulsa aceptar, espacio o flecha arriba para saltar.">
-          <div class="finish-line"></div>
-          <div class="dog" id="dog" aria-label="Perrito corredor">
-            <span class="tail">◜</span><span class="ear ear-left"></span><span class="ear ear-right"></span>
-            <span class="face"><i></i><i></i><b></b></span><span class="body"><em></em></span>
-            <span class="leg leg-one"></span><span class="leg leg-two"></span>
-          </div>
-          <div class="toast" id="toast" aria-live="polite"></div>
-          <div class="start-card" id="startCard">
-            <span class="paw">🐾</span>
-            <h1>¡A correr!</h1>
-            <p>Salta los obstáculos y atrapa todos los huesitos que puedas.</p>
-            <button class="primary-button" id="startButton">JUGAR AHORA <span>→</span></button>
-            <small>PC: <kbd>ESPACIO</kbd>/<kbd>↑</kbd> · TV: <kbd>OK</kbd>/<kbd>↑</kbd> · Móvil: toca la pantalla</small>
-          </div>
-          <div class="game-over-card hidden" id="gameOverCard">
-            <span class="medal">🏆</span>
-            <h2>¡Buen intento!</h2>
-            <p>Conseguiste <strong id="finalScore">0</strong> huesitos.</p>
-            <button class="primary-button" id="restartButton">CORRER OTRA VEZ <span>↻</span></button>
-          </div>
-        </div>
-        <div class="grass grass-back"></div><div class="ground"><div class="road-markings"></div></div><div class="grass grass-front"></div>
-      </section>
+<section class="skin-panel" aria-label="Skins">
+<h2>👕 Skins</h2>
+<div class="skin-grid">
+<button class="skin-btn active" data-skin="dog">🐶 SoyPerrito</button>
+<button class="skin-btn" data-skin="4d">✨ Mi skin 4D</button>
+<label class="import-btn" for="skinFile">📥 Importar skin</label>
+<input class="skin-file" id="skinFile" type="file" accept="image/png,image/jpeg" />
+<img id="skinPreview" class="skin-preview" alt="Vista previa de la skin" hidden />
+</div>
+<div class="skin-status" id="skinStatus">Skin seleccionada: SoyPerrito</div>
+</section>
 
-      <section class="how-to">
-        <article><span class="instruction-icon key-icon">↑</span><div><h2>SALTA</h2><p>Esquiva los conos y charcos.</p></div></article>
-        <article><span class="instruction-icon bone-icon">🦴</span><div><h2>ATRAPA</h2><p>¡Cada huesito suma un punto!</p></div></article>
-        <article><span class="instruction-icon bolt-icon">⚡</span><div><h2>ACELERA</h2><p>El camino se pone más intenso.</p></div></article>
-      </section>
-    </main>
-    <footer>HECHO PARA QUIENES NUNCA DEJAN DE JUGAR <span>♥</span></footer>
-    <script src="game.js"></script>
-  </body>
+<section class="hero" id="hero">
+<div class="cloud cloud-one"></div><div class="cloud cloud-two"></div><div class="sun"></div>
+<div class="city city-back"></div><div class="city city-front"></div><div class="mountains"></div>
+<div class="play-field" id="playField" tabindex="0" aria-label="Zona de juego. Pulsa espacio, flecha arriba, OK o toca para saltar.">
+<div class="finish-line"></div><div class="dog" id="dog" aria-label="SoyPerrito"></div><div class="toast" id="toast" aria-live="polite"></div>
+<div class="start-card" id="startCard"><span class="paw">🐾</span><h1>¡SoyPerritoProProYT Bed!</h1><p>Juego web estilo Bedrock. Salta los obstáculos y atrapa huesitos.</p><button class="primary-button" id="startButton">JUGAR AHORA <span>→</span></button><small>PC: ESPACIO/↑ · TV: OK/↑ · Móvil: toca</small></div>
+<div class="game-over-card hidden" id="gameOverCard"><span class="medal">🏆</span><h2>¡Buen intento!</h2><p>Conseguiste <strong id="finalScore">0</strong> huesitos.</p><button class="primary-button" id="restartButton">CORRER OTRA VEZ <span>↻</span></button></div>
+</div>
+<div class="grass grass-back"></div><div class="ground"><div class="road-markings"></div></div><div class="grass grass-front"></div>
+</section>
+<section class="how-to"><article><span class="instruction-icon key-icon">↑</span><div><h2>SALTA</h2><p>Esquiva los obstáculos.</p></div></article><article><span class="instruction-icon bone-icon">🦴</span><div><h2>ATRAPA</h2><p>¡Cada huesito suma!</p></div></article><article><span class="instruction-icon bolt-icon">⚡</span><div><h2>ACELERA</h2><p>El camino se intensifica.</p></div></article></section>
+</main>
+<footer>SOYPERRITOPROPROYT BED · HECHO PARA JUGAR <span>♥</span></footer>
+<script src="game.js"></script>
+<script>
+const skinStatus=document.querySelector('#skinStatus'), skinPreview=document.querySelector('#skinPreview'), skinFile=document.querySelector('#skinFile');
+document.querySelectorAll('[data-skin]').forEach(btn=>btn.addEventListener('click',()=>{document.querySelectorAll('[data-skin]').forEach(b=>b.classList.remove('active'));btn.classList.add('active');skinStatus.textContent='Skin seleccionada: '+(btn.dataset.skin==='4d'?'Mi skin 4D':'SoyPerrito');}));
+skinFile.addEventListener('change',()=>{const file=skinFile.files?.[0];if(!file)return;const url=URL.createObjectURL(file);skinPreview.src=url;skinPreview.hidden=false;skinStatus.textContent='Skin importada: '+file.name;});
+</script>
+</body>
 </html>
